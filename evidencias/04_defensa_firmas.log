@@ -1,0 +1,57 @@
+
+============================================================
+ PRUEBA 4: Defensa con firmas Ed25519
+============================================================
+--- Generando claves de confianza pre-compartidas ---
+[setup] Par Ed25519 de 'cliente': privada en claves_privadas/, pública en trusted_keys/.
+[setup] Par Ed25519 de 'servidor': privada en claves_privadas/, pública en trusted_keys/.
+[setup] Claves de confianza generadas y pre-compartidas.
+
+>>> (4a) CICLO LEGÃTIMO directo: cifrado + recuperaciÃ³n <<<
+[servidor+] Escuchando (con firmas) en 127.0.0.1:50000.
+[cliente+] id_v=a62b0c68-4385-4b98-a580-32e2446c479d
+[servidor+] Conexión de ('127.0.0.1', 55432)
+[servidor+] REGISTRO autenticado de a62b0c68-4385-4b98-a580-32e2446c479d.
+[cliente+] REGISTRO autenticado y aceptado.
+[servidor+] SEMILLA firmada enviada a a62b0c68-4385-4b98-a580-32e2446c479d.
+[cliente+] s_v autenticada y descifrada (32 bytes).
+[servidor+] ACK de a62b0c68-4385-4b98-a580-32e2446c479d.
+[cliente+] 3 archivo(s) cifrado(s) en archivos_cifrados/.
+[cliente+] s_v borrada de memoria.
+[cliente+] Recuperación: id_v=a62b0c68-4385-4b98-a580-32e2446c479d y sk_v cargados.
+[servidor+] Conexión de ('127.0.0.1', 55433)
+[servidor+] RECUPERAR autorizado y firmado para a62b0c68-4385-4b98-a580-32e2446c479d.
+[cliente+] s_v recuperada y autenticada (32 bytes).
+   [i=0] alpha.txt: OK, idéntico al original.
+   [i=1] bravo.txt: OK, idéntico al original.
+   [i=2] charlie.bin: OK, idéntico al original.
+[cliente+] Recuperación: 3 procesados | 3 descifrados | 0 rechazados | 3 idénticos.
+
+>>> (4b) CASO 1: proxy sustituye pk_v sin tocar la firma -> RECHAZO <<<
+[MITM] Caso 1 (sustitución de pk_v)
+[MITM] Escuchando en 127.0.0.1:60000 -> 127.0.0.1:50000
+[cliente+] id_v=a62b0c68-4385-4b98-a580-32e2446c479d
+[MITM] Cliente ('127.0.0.1', 55434) conectado.
+[servidor+] Conexión de ('127.0.0.1', 55435)
+[MITM] REGISTRO de a62b0c68-4385-4b98-a580-32e2446c479d: pk_v -> pk_m (sustituida).
+[servidor+] !! Firma de REGISTRO INVÁLIDA para a62b0c68-4385-4b98-a580-32e2446c479d. Posible MITM (Caso 1): se ABORTA (no se enviará s_v).
+[MITM] El servidor ABORTÓ: firma de cliente inválida. Ataque frustrado.
+[cliente+] Registro rechazado: {'accion': 'ABORTADO', 'detalle': 'firma de cliente inválida'}. (si hay proxy, la defensa lo detuvo -> OK)
+[MITM] Sesión terminada. (usa --descifrar para el botín)
+[servidor+] Escuchando (con firmas) en 127.0.0.1:50000.
+
+>>> (4c) CASO 2: proxy forja firma propia y adjunta su clave -> RECHAZO <<<
+[MITM] Caso 2 (suplantación de firma)
+[MITM] Escuchando en 127.0.0.1:60000 -> 127.0.0.1:50000
+[cliente+] id_v=a62b0c68-4385-4b98-a580-32e2446c479d
+[MITM] Cliente ('127.0.0.1', 55438) conectado.
+[servidor+] Conexión de ('127.0.0.1', 55439)
+[MITM] REGISTRO de a62b0c68-4385-4b98-a580-32e2446c479d: pk_v -> pk_m (sustituida).
+[MITM] Caso 2: firma forjada con clave Ed25519 propia y clave de verificación adjunta.
+[servidor+] !! Clave de verificación ADJUNTA no coincide con trusted_keys/ para a62b0c68-4385-4b98-a580-32e2446c479d. Suplantación (Caso 2): se ABORTA (no se enviará s_v).
+[MITM] El servidor ABORTÓ: clave de firma adjunta no confiable. Ataque frustrado.
+[cliente+] Registro rechazado: {'accion': 'ABORTADO', 'detalle': 'clave de firma adjunta no confiable'}. (si hay proxy, la defensa lo detuvo -> OK)
+[MITM] Sesión terminada. (usa --descifrar para el botín)
+
+--- Â¿El proxy logrÃ³ robar la semilla? (debe ser NO) ---
+(ninguna semilla robada: defensa efectiva)

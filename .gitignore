@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+
+# Estado generado en tiempo de ejecución (claves, bases, salidas)
+*.pem
+cliente_id.txt
+db_servidor.json
+db_servidor_firmado.json
+archivos_cifrados/
+archivos_originales/
+archivos_recuperados/
+archivos_atacados/
+proxy_botin/
+defensa_firmas/claves_privadas/
+defensa_firmas/trusted_keys/
+defensa_firmas/archivos_cifrados/
+defensa_firmas/archivos_originales/
+defensa_firmas/archivos_recuperados/
+
+# Docker (volúmenes locales si se montan aquí)
+datos/
+
+# LaTeX (intermedios)
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# ...pero las evidencias de ejecución SÍ se versionan
+!evidencias/
+!evidencias/*.log

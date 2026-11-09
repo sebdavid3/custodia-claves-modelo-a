@@ -1,0 +1,30 @@
+
+============================================================
+ PRUEBA 2: AuditorÃ­a de entropÃ­a 5b (servidor apagado)
+============================================================
+--- Servidor confirmado APAGADO. Fuerza bruta sobre el archivo i=0 ---
+======================================================================
+ AUDITORÍA DE ENTROPÍA (Punto 5b) — servidor NO requerido
+======================================================================
+[5b] Archivo i=0: 0000_alpha.txt.enc.json (id_v=cce0fc88-7852-4ba8-9edb-c233b5061531, original='alpha.txt')
+
+[5b] Iniciando búsqueda en [0, 2**24) = 16,777,216 candidatos...
+
+[5b] --- RESULTADO DE LA BÚSQUEDA ---
+   Semilla s_v (hex)   : 0000000000000000000000000000000000000000000000000000000000003532
+   Valor entero        : 13,618
+   Candidatos evaluados: 13,619 de 16,777,216
+   Tiempo total        : 0.103 s
+   Velocidad           : 132,526 candidatos/seg
+
+[5b] --- Descifrado masivo con la semilla hallada ---
+   Archivos procesados : 3
+   Descifrados OK      : 3
+   Idénticos al original: 3
+   Tiempo de descifrado : 0.53 ms
+   Tiempo de comparación: 0.40 ms
+   Copias en: C:\Users\sebda\OneDrive\Escritorio\Cripto\archivos_atacados
+
+[5b] Conclusión: la fortaleza de RSA-OAEP y AES-GCM es irrelevante
+     si la semilla vive en un espacio de 2**24. La entropía del
+     generador, no el cifrado, es el eslabón débil.

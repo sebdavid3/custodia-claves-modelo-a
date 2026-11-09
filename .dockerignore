@@ -1,0 +1,21 @@
+# Estado generado en tiempo de ejecución (no debe entrar en la imagen)
+datos/
+evidencias/
+proxy_botin/
+archivos_cifrados/
+archivos_originales/
+archivos_recuperados/
+archivos_atacados/
+*.log
+*.pem
+cliente_id.txt
+db_servidor.json
+defensa_firmas/claves_privadas/
+defensa_firmas/trusted_keys/
+defensa_firmas/archivos_cifrados/
+defensa_firmas/archivos_originales/
+defensa_firmas/archivos_recuperados/
+defensa_firmas/db_servidor_firmado.json
+__pycache__/
+*.pyc
+.git/

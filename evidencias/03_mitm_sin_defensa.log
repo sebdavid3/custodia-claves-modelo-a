@@ -1,0 +1,38 @@
+
+============================================================
+ PRUEBA 3: Proxy MITM SIN defensa (roba s_v)
+============================================================
+[servidor] Par RSA generado y guardado.
+[servidor] Escuchando en 127.0.0.1:50000. Ctrl+C para salir.
+[MITM] Caso 1 (sustitución de pk_v)
+[MITM] Escuchando en 127.0.0.1:60000 -> 127.0.0.1:50000
+--- Cliente apuntando al PROXY (cree que es el servidor) ---
+[cliente] Identidad creada. id_v=231ef6b6-271b-4c96-a7f7-0e950db477f1
+[MITM] Cliente ('127.0.0.1', 55430) conectado.
+[servidor] Conexión de ('127.0.0.1', 55431)
+[MITM] REGISTRO de 231ef6b6-271b-4c96-a7f7-0e950db477f1: pk_v -> pk_m (sustituida).
+[servidor] REGISTRO: nuevo cliente 231ef6b6-271b-4c96-a7f7-0e950db477f1.
+[cliente] Paso 1 OK: registrado; pk_s recibida.
+[servidor] SEMILLA: generada y custodiada para 231ef6b6-271b-4c96-a7f7-0e950db477f1 (autorizado=False).
+[MITM] *** s_v INTERCEPTADA para 231ef6b6-271b-4c96-a7f7-0e950db477f1: 00000000000000000000000000000000000000000000000000000000003abff7
+[MITM] s_v re-cifrada con pk_v real: el cliente no nota nada.
+[cliente] Paso 2 OK: s_v descifrada en memoria (32 bytes).
+[servidor] ACK recibido de 231ef6b6-271b-4c96-a7f7-0e950db477f1: el cliente posee s_v.
+[cliente] ACK confirmado por el servidor: ACK_OK
+[cliente] Paso 3: cifrando 3 archivo(s)...
+[MITM] Sesión terminada. (usa --descifrar para el botín)
+   [i=0] alpha.txt -> 0000_alpha.txt.enc.json
+   [i=1] bravo.txt -> 0001_bravo.txt.enc.json
+   [i=2] charlie.bin -> 0002_charlie.bin.enc.json
+[cliente] Paso 3 OK: s_v y las K_i borradas de memoria. El mensaje OAEP inicial no se guardó en disco.
+
+--- El proxy descifra el BOTÃN con la s_v interceptada ---
+[MITM] Descifrando botín de 231ef6b6-271b-4c96-a7f7-0e950db477f1 con s_v=00000000000000000000000000000000000000000000000000000000003abff7
+   [i=0] alpha.txt descifrado -> proxy_botin/
+   [i=1] bravo.txt descifrado -> proxy_botin/
+   [i=2] charlie.bin descifrado -> proxy_botin/
+
+--- Semilla robada registrada por el proxy: ---
+{
+  "231ef6b6-271b-4c96-a7f7-0e950db477f1": "00000000000000000000000000000000000000000000000000000000003abff7"
+}

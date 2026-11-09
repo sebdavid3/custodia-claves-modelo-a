@@ -1,0 +1,22 @@
+ACTIVIDAD III
+
+Empiece por ActividadIII_Enunciado.pdf. Elija A o B y construya su
+aplicación usando el material de referencia enlazado en el enunciado.
+Los números de los pasos relacionan la descripción con los diagramas.
+La defensa frente al intermediario debe usar firmas digitales;
+el diseño y su justificación forman parte del trabajo.
+
+CONTENIDO
+- ActividadIII_Enunciado.pdf: enunciado y diagramas completos.
+- generador_semillas.py: único código suministrado; úselo sin cambios.
+- LEEME.txt: estas indicaciones.
+
+USO DEL GENERADOR
+    from generador_semillas import generar_semilla_maestra
+    s_V = generar_semilla_maestra()
+
+La función no recibe argumentos y devuelve 32 bytes. Llámela una vez
+por víctima: en el servidor para A o en la víctima para B.
+
+El PDF establece el alcance, las pruebas y la entrega. No hay
+sustentación oral.

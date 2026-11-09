@@ -1,0 +1,73 @@
+# Laboratorio en contenedores (Modelo A): servidor, proxy y cliente aislados
+# sobre una red interna. Parametrizable por variables de entorno:
+#   SRV_HOST (def. servidor)  SRV_PORT (def. 50000)  PROXY_PORT (def. 60000)
+#
+# Uso típico:
+#   docker compose build
+#   docker compose up -d servidor
+#   # (A) cifrado legítimo directo al servidor:
+#   docker compose run --rm cliente python cliente.py --host servidor --puerto 50000
+#   # (B) recuperación:
+#   docker compose run --rm cliente python cliente.py --modo recuperacion_servidor --host servidor --puerto 50000
+#   # (C) ataque MITM a través del proxy:
+#   docker compose up -d proxy
+#   docker compose run --rm cliente python cliente.py --host proxy --puerto 60000
+#   docker compose run --rm proxy python proxy_mitm.py --descifrar
+#
+# La red es interna (sin salida a Internet) para aislar el laboratorio.
+
+services:
+  servidor:
+    build: .
+    image: cripto-lab:latest
+    container_name: cripto_servidor
+    environment:
+      CRIPTO_DATA: /app/datos
+    command: ["python", "servidor.py", "--host", "0.0.0.0", "--puerto", "${SRV_PORT:-50000}"]
+    networks: [cripto_net]
+    volumes:
+      - datos_servidor:/app/datos
+    restart: unless-stopped
+
+  proxy:
+    build: .
+    image: cripto-lab:latest
+    container_name: cripto_proxy
+    depends_on: [servidor]
+    environment:
+      CRIPTO_DATA: /app/datos
+    command: ["python", "proxy_mitm.py",
+              "--bind", "0.0.0.0",
+              "--escucha", "${PROXY_PORT:-60000}",
+              "--servidor-host", "${SRV_HOST:-servidor}",
+              "--servidor-puerto", "${SRV_PORT:-50000}"]
+    networks: [cripto_net]
+    volumes:
+      - datos_proxy:/app/datos
+      - cifrados_compartidos:/app/datos/archivos_cifrados   # ve lo que cifra el cliente
+
+  # Servicio bajo demanda (no arranca con `up`): usar `docker compose run --rm cliente ...`
+  cliente:
+    build: .
+    image: cripto-lab:latest
+    container_name: cripto_cliente
+    depends_on: [servidor]
+    environment:
+      CRIPTO_DATA: /app/datos
+    command: ["python", "cliente.py", "--host", "${SRV_HOST:-servidor}", "--puerto", "${SRV_PORT:-50000}"]
+    profiles: ["manual"]
+    networks: [cripto_net]
+    volumes:
+      - datos_cliente:/app/datos
+      - cifrados_compartidos:/app/datos/archivos_cifrados
+
+networks:
+  cripto_net:
+    driver: bridge
+    internal: true          # red interna aislada (sin acceso a Internet)
+
+volumes:
+  datos_servidor:
+  datos_cliente:
+  datos_proxy:
+  cifrados_compartidos:     # volumen compartido cliente<->proxy para los .enc.json
